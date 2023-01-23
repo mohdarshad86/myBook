@@ -9,7 +9,7 @@ mongoose.connect("mongodb+srv://nehajaiswal:neha123@nehadb.pcorgpc.mongodb.net/g
     useNewUrlParser: true,
 })
     .then(() => console.log("DB is Connected"))
-    .catch(error => console.log(error)
+    .catch(error => console.log(error))
 
 app.use("/", route)
 
