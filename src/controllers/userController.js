@@ -5,30 +5,9 @@ Create a user - atleast 5 users
 Create a user document from request body.
 Return HTTP status 201 on a succesful user creation. Also return the user document. The response should be a JSON object like this
 Return HTTP status 400 if no params or invalid params received in request body. The response should be a JSON object like this
-
-POST /login
-
-Allow an user to login with their email and password.
-On a successful login attempt return a JWT token contatining the userId, exp, iat. The response should be a JSON object like this
-If the credentials are incorrect return a suitable error message with a valid HTTP status code. The response should be a JSON object like this
-
- title: {string, mandatory, enum[Mr, Mrs, Miss]},
-  name: {string, mandatory},
-  phone: {string, mandatory, unique},
-  email: {string, mandatory, valid email, unique}, 
-  password: {string, mandatory, minLen 8, maxLen 15},
-  address: {
-    street: {string},
-    city: {string},
-    pincode: {string}
-  },
-
-
 */
-const emailRegx = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/;
-const passwordRegx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*]).{8,15}$/;
-const phoneRegx = /^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[789]\d{9}$/;
 
+const valid = require("../validation/validation")
 const userModel = require("../models/userModel");
 const jwt = require('jsonwebtoken')
 
@@ -81,7 +60,7 @@ const userRegister = async function (req, res) {
                 .status(400)
                 .send({ status: false, message: "enter valid phone number" })
         }
-        if (!phoneRegx.test(phone)) {
+        if (!valid.phoneValid(phone)) {
             return res
                 .status(400)
                 .send({ status: false, message: "enter valid phone number" });
@@ -98,7 +77,7 @@ const userRegister = async function (req, res) {
                 .send({ status: false, message: "email is mandatory" });
         }
 
-        if (!emailRegx.test(email)) {
+        if (!valid.emailValid(email)) {
             return res
                 .status(400)
                 .send({ status: false, message: "enter valid email id" });
@@ -116,7 +95,7 @@ const userRegister = async function (req, res) {
                 .send({ status: false, message: "password is mandatory" });
         }
 
-        if (!passwordRegx.test(password)) {
+        if (!valid.passwordValid(password)) {
             return res
                 .status(400)
                 .send({ status: false, message: "Password should contain atleast 1 lowercase, 1 uppercase, 1 numeric ,1 special character, range between 8-12" });
@@ -129,12 +108,14 @@ const userRegister = async function (req, res) {
         return res.status(500).send({ status: false, message: error.message });
     }
 }
-/* POST /login
+/*
+POST /login
 
 Allow an user to login with their email and password.
 On a successful login attempt return a JWT token contatining the userId, exp, iat. The response should be a JSON object like this
 If the credentials are incorrect return a suitable error message with a valid HTTP status code. The response should be a JSON object like this
 */
+
 
 const userLogin = async function(req,res){
     try {
@@ -146,7 +127,7 @@ const userLogin = async function(req,res){
         if(!email){
             return res.status(400).send({status: false, message: "Please provide email-id"})
         }
-        if (!emailRegx.test(email)) {
+        if (!valid.emailValid(email)) {
             return res
               .status(400)
               .send({ status: false, message: "please provide valid email id" });
@@ -155,7 +136,7 @@ const userLogin = async function(req,res){
             return res.status(400).send({status: false, message: "Please provide password"})
         }
 
-        if (!passwordRegx.test(password)) {
+        if (!valid.passwordValid(password)) {
             return res
               .status(400)
               .send({ status: false, message: "Please provide valid password" });
@@ -166,12 +147,11 @@ const userLogin = async function(req,res){
             return res.status(400).send({status: false, message: "invalid login credential"})
         }
 
-    
-        let token = jwt.sign({
-            userId: userDetail._id,
-            exp: Math.floor(Date.now() / 1000) + (60 * 60),  // expires in 1 hour
-            // iat: Math.floor(Date.now() / 1000),
-        },"secretKeyProject4")
+        let payLoad = {userId : userDetail._id, iat : Date.now()}
+
+        let token = jwt.sign(
+            payLoad ,
+        "secretKeyProject4", {expiresIn : "5 min"})
 
         res.status(200).send({status: true, message:"successfully login", data: token})
 

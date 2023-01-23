@@ -9,7 +9,7 @@
 
 // title,excerpt,userID,ISBN,category,subcategory,releasedAt
 
-const ISBNReg = /^(?=(?:\D*\d){8,10}(?:(?:\D*\d){3})?$)[\d-]+$/
+const valid = require('../validation/validation')
 const moment = require('moment')
 const mongoose = require('mongoose');
 const bookModel = require('../models/bookModel');
@@ -57,7 +57,7 @@ const createBook = async function (req, res) {
         if (!ISBN)
             return res.status(400).send({ status: false, message: "Please provide the ISBN" })
 
-        if (!ISBNReg.test(ISBN))
+        if (!valid.isbnValid(ISBN))
             return res.status(400).send({ status: false, message: "Please provide valid ISBN" })
 
         const findISBN = await bookModel.findOne({ ISBN: ISBN })
@@ -79,13 +79,11 @@ const createBook = async function (req, res) {
         if (!releasedAt)
             return res.status(400).send({ status: false, message: "Please provide the releasedAt" })
 
-        if (!(moment(releasedAt).format("MM/DD/YYYY")))
-            return res.status(400).send({ status: false, message: "Please provide valid date" })
+        // if (!(moment(releasedAt).format("MM/DD/YYYY")))
+        //     return res.status(400).send({ status: false, message: "Please provide valid date" })
 
 
         const createdBook = await bookModel.create(bookData)
-
-        // createdBook.releasedAt=moment().format('YYYY MM DD')
         return res.status(201).send({ status: true, data: createdBook })
 
     }
@@ -95,4 +93,31 @@ const createBook = async function (req, res) {
 
 }
 
-module.exports = {createBook}
+
+const getBook = async function (req, res) {
+    try {
+        const data = req.query
+        const { userId, category, subcategory } = data
+        if (Object.keys(data).length == 0) {
+            const fetchData = await bookModel.find({ isDeleted: false }).sort({ title: 1 })
+            return res.status(200).send({ status: true, data: fetchData })
+        }
+
+        if (userId || subcategory || category) {
+
+            const filterData = await bookModel.find({ ...data, isDeleted: false }).sort({ title: 1 })
+
+            if (filterData.length == 0) { return res.status(404).send({ status: false, message: "book not found" }) }
+
+            return res.status(200).send({ status: true, data: filterData })
+        }
+          else  return res.status(400).send({ status: false, message: "invalid key" })
+        
+
+    } catch (err) {
+        res.status(500).send({ status: false, message: err.message })
+    }
+}
+
+
+module.exports = { createBook, getBook }

@@ -7,6 +7,7 @@ const bookController = require("../controllers/bookController")
 router.post('/register',userController.userRegister)
 router.post('/login',userController.userLogin)
 router.post('/books', bookController.createBook)
+router.get('/books',bookController.getBook)
 
 
 router.all('/*',function(){

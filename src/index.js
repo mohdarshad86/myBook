@@ -5,6 +5,8 @@ const app = express()
 app.use(express.json())
 
 
+mongoose.set('strictQuery', true)
+
 mongoose.connect("mongodb+srv://nehajaiswal:neha123@nehadb.pcorgpc.mongodb.net/group15Database", {
     useNewUrlParser: true,
 })
