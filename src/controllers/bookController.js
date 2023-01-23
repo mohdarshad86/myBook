@@ -10,7 +10,6 @@
 // title,excerpt,userID,ISBN,category,subcategory,releasedAt
 
 const valid = require('../validation/validation')
-const moment = require('moment')
 const mongoose = require('mongoose');
 const bookModel = require('../models/bookModel');
 const userModel = require('../models/userModel');
@@ -78,10 +77,6 @@ const createBook = async function (req, res) {
 
         if (!releasedAt)
             return res.status(400).send({ status: false, message: "Please provide the releasedAt" })
-
-        // if (!(moment(releasedAt).format("MM/DD/YYYY")))
-        //     return res.status(400).send({ status: false, message: "Please provide valid date" })
-
 
         const createdBook = await bookModel.create(bookData)
         return res.status(201).send({ status: true, data: createdBook })

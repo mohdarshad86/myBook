@@ -151,7 +151,7 @@ const userLogin = async function(req,res){
 
         let token = jwt.sign(
             payLoad ,
-        "secretKeyProject4", {expiresIn : "5 min"})
+        "secretKeyProject4", {expiresIn : "1 min"})
 
         res.status(200).send({status: true, message:"successfully login", data: token})
 
