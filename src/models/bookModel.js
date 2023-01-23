@@ -5,12 +5,12 @@ const ObjectId = mongoose.Schema.Types.ObjectId
 const bookModel = new mongoose.Schema({
 
     title: {
-        type: string,
+        type: String,
         required: true,
         unique: true
     },
     excerpt: {
-        type: string,
+        type: String,
         required: true
     },
     userId: {
@@ -20,25 +20,25 @@ const bookModel = new mongoose.Schema({
 
     },
     ISBN: {
-        type: string,
+        type: String,
         required: true,
         unique: true
     },
     category: {
-        type: string,
+        type: String,
         required: true
     },
     subcategory: {
-        type: string,
+        type: String,
         required: String
     },
     reviews: {
-        type: number,
+        type: Number,
         default: 0
     },
 
     isDeleted: {
-        type: boolean,
+        type: Boolean,
         default: false
     },
     releasedAt: {

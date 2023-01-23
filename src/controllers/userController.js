@@ -166,6 +166,7 @@ const userLogin = async function(req,res){
             return res.status(400).send({status: false, message: "invalid login credential"})
         }
 
+    
         let token = jwt.sign({
             userId: userDetail._id,
             exp: Math.floor(Date.now() / 1000) + (60 * 60),  // expires in 1 hour
