@@ -9,7 +9,7 @@ router.post('/register',userController.userRegister)
 router.post('/login',userController.userLogin)
 router.post('/books', auth.authentication,bookController.createBook)
 router.get('/books',auth.authentication,bookController.getBook)
-
+router.get('/books/:bookId', auth.authentication,bookController.getBookParams)
 
 router.all('/*',function(){
     console.log("invalid http request")
