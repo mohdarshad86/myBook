@@ -14,8 +14,8 @@ router.put('/books/:bookId',auth.authentication,auth.authorization,bookControlle
 router.delete('/books/:bookId',auth.authentication,auth.authorization, bookController.deletBook)
 
 
-router.all('/*',function(){
-    console.log("invalid http request")
+router.all("/*",function(req,res){
+    res.status(400).send({status : false, msg:"invalid http request"})
 })
 
 module.exports = router

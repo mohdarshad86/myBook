@@ -28,7 +28,7 @@ const authentication = function (req, res, next) {
 const authorization = async function(req,res,next){
     try {
         const bookId = req.params.bookId
-       
+       const userId = req.decodedToken.userId
         if (!bookId) {
             return res.status(400).send({ status: false, message: "please provide book id" });
         }
@@ -65,4 +65,4 @@ const createBookAuth = async function(req,res,next){
 }
 
 
-module.exports = {authentication, authorization, createBookAuth}
+module.exports = {authentication, authorization,createBookAuth}
