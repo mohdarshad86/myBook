@@ -147,11 +147,11 @@ const userLogin = async function(req,res){
             return res.status(400).send({status: false, message: "invalid login credential"})
         }
 
-        let payLoad = {userId : userDetail._id, iat : Date.now()}
+        let payLoad = {userId : userDetail._id}
 
         let token = jwt.sign(
             payLoad ,
-        "secretKeyProject4", {expiresIn : 25000 })
+        "secretKeyProject4", {expiresIn : "5m" })
 
         res.status(200).send({status: true, message:"successfully login", data: token})
 
