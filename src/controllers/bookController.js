@@ -116,48 +116,68 @@ const getBook = async function (req, res) {
 }
 
 
+// const getBookParams = async function (req, res) {
+//     try {
+//         let bookId = req.params.bookId
+//         if (!bookId) {
+//             return res.status(400).send({ status: false, message: "Book id is mandatory" })
+//         }
+//         if (!mongoose.isValidObjectId(bookId)) {
+//             return res.status(400).send({ status: false, message: "Book id is invalid" })
+//         }
+//         const checkBook = await bookModel.findById(bookId)
+//         if (!checkBook) {
+//             return res.status(404).send({ status: false, message: "Book not found" })
+//         }
+        
+//         const checkReview = await reviewModel.findById(bookId)
+//         if(!checkReview){
+//             return res.status(400).send({status: false, message: "Book not found"})
+//         }
+
+//         let object = {}
+//         object.title = checkBook.title,
+//             object.userId = checkBook.userId,
+//             object.ISBN = checkBook.ISBN,
+//             object.isDeleted = checkBook.isDeleted,
+//             object.reviews = checkBook.reviews
+//             object.reviewsData = checkReview.reviewdBy
+
+//         let object2 = {}
+//         object2.title = checkBook.title,
+//             object2.userId = checkBook.userId,
+//             object2.ISBN = checkBook.ISBN,
+//             object2.isDeleted = checkBook.isDeleted,
+//             object2.reviews = checkBook.reviews
+//             object2.reviewsData = []
+//         if (checkBook.reviews == 0) {
+//            return res.status(400).send({ status: false, data: object2 })
+//         }
+
+
+//         return res.status(200).send({ status: true, message: "Success", data: object })
+
+//     } catch (error) {
+//         res.status(500).send({ status: false, message: error.message })
+//     }
+// }
+
 const getBookParams = async function (req, res) {
     try {
-        let bookId = req.params.bookId
-        if (!bookId) {
-            return res.status(400).send({ status: false, message: "Book id is mandatory" })
-        }
-        if (!mongoose.isValidObjectId(bookId)) {
-            return res.status(400).send({ status: false, message: "Book id is invalid" })
-        }
-        const checkBook = await bookModel.findById(bookId)
-        if (!checkBook) {
-            return res.status(404).send({ status: false, message: "Book not found" })
-        }
-        
-        const checkReview = await reviewModel.findById(bookId)
-        if(!checkReview){
-            return res.status(400).send({status: false, message: "Book not found"})
-        }
+        const bookId = req.params.bookId
 
-        let object = {}
-        object.title = checkBook.title,
-            object.userId = checkBook.userId,
-            object.ISBN = checkBook.ISBN,
-            object.isDeleted = checkBook.isDeleted,
-            object.reviews = checkBook.reviews
-            object.reviewsData = checkReview.reviewdBy
-
-        let object2 = {}
-        object.title = checkBook.title,
-            object.userId = checkBook.userId,
-            object.ISBN = checkBook.ISBN,
-            object.isDeleted = checkBook.isDeleted,
-            object.reviews = checkBook.reviews
-            object.reviewsData = []
-        if (checkBook.reviews == 0) {
-           return res.status(400).send({ status: false, data: object2 })
+        let data = await bookModel.findById(bookId)  // or we can use doc()
+    
+        if (!data){return res.status(404).send({status:false, message:"Book not found"})}
+        if (data.isDeleted===true){return res.status(404).send({status:false, message:"Book is already deleted"})}
+    
+        const bookreviews = await reviewModel.find({bookId: bookId},{isDeleted:false}).select({isDeleted:0})
+    
+         data.bookreviews=bookreviews
+    
+        return res.status(200).send({status:true,message:"Success",data:data})
         }
-
-
-        return res.status(200).send({ status: true, message: "Success", data: object })
-
-    } catch (error) {
+     catch (error) {
         res.status(500).send({ status: false, message: error.message })
     }
 }
