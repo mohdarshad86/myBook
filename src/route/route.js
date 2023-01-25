@@ -14,6 +14,9 @@ router.get('/books/:bookId', auth.authentication,bookController.getBookParams)
 router.put('/books/:bookId',auth.authentication,auth.authorization,bookController.updateBook )
 router.delete('/books/:bookId',auth.authentication,auth.authorization, bookController.deletBook)
 router.post('/books/:bookId/review',auth.authentication, reviewController.reviewCreate)
+router.delete('/books/:bookId/review/:reviewId',auth.authentication,auth.authorization, reviewController.reviewDeletion)
+
+
 
 router.all("/*", function(){
     res.status(400).send({status : false, message:"invalid http request"})

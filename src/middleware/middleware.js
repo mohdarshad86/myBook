@@ -11,8 +11,8 @@ const authentication = function (req, res, next) {
         }
         jwt.verify(token, 'secretKeyProject4', function (err, decoded) {
             if (err) {
-                 let msg = err.message == "jwt expired" ? "Token is expired" : "Token is invalid"
-             return res.status(401).send({message: msg})
+                //  let msg = err.message == "jwt expired" ? "Token is expired" : "Token is invalid"
+             return res.status(401).send({message: err.message})
             }
             else {
                 req.decodedToken = decoded
