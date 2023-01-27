@@ -8,11 +8,13 @@ const reviewCreate = async function (req, res) {
         const bookIdByparam = req.params.bookId
         let bodyData = req.body
         let { bookId, reviewedBy, reviewedAt, rating, review } = bodyData
-
-        bookId = bodyData.bookId = bookId.trim()
+        
+        bookId     = bodyData.bookId = bookId.trim()
+        if(req.body.reviewedBy){
         reviewedBy = bodyData.reviewedBy = reviewedBy.trim()
-        review = bodyData.review = review.trim()
-
+        }
+        review     =  bodyData.review = review.trim()
+        reviewedAt = bodyData.reviewedAt = reviewedAt.trim()
 
         if (!mongoose.isValidObjectId(bookIdByparam)) {
             return res.status(400).send({ status: false, message: "provide valid book id" })
