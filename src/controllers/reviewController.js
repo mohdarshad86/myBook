@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const { findOne } = require('../models/bookModel')
 const bookModel = require('../models/bookModel')
 const reviewModel = require('../models/reviewModel')
 
@@ -44,7 +43,7 @@ const reviewCreate = async function (req, res) {
         }
 
         if (!reviewedBy) {
-            return res.status(400).send({ status: false, messsage: "Please provide valid reviewer name" })
+            bodyData.reviewedBy = "Guest"
         }
         if (typeof (reviewedBy) != "string") {
             return res.status(400).send({ status: false, messsage: "Please provide  reviewer name in string" })
@@ -59,7 +58,7 @@ const reviewCreate = async function (req, res) {
         if (typeof (rating) != "number") {
             return res.status(400).send({ status: false, messsage: "Please  provide  valid ratings" })
         }
-        if (!(rating >= 1 && rating <= 5)) {
+        if (rating < 1 || rating > 5) {
             return res.status(400).send({ status: false, messsage: "Please provide valid ratings from 1-5" })
         }
 
@@ -197,7 +196,7 @@ const reviewDeletion = async function (req, res) {
         }
 
         
-        return res.status(200).send({ status: true, message: "no review " })
+        return res.status(400).send({ status: true, message: "no review " })
         
         
     }

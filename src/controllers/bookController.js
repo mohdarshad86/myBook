@@ -58,7 +58,7 @@ const createBook = async function (req, res) {
             return res.status(400).send({ status: false, message: "Please provide the ISBN" })
 
         if (!valid.isbnValid(ISBN))
-            return res.status(400).send({ status: false, message: "Please provide valid ISBN" })
+            return res.status(400).send({ status: false, message: "Please provide valid ISBN, e.g: 978-1861978709 " })
 
         const findISBN = await bookModel.findOne({ ISBN: ISBN })
         if (findISBN)
