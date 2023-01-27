@@ -47,7 +47,7 @@ const createBook = async function (req, res) {
         if (!ISBN)
             return res.status(400).send({ status: false, message: "Please provide the ISBN" })
 
-        if (!valid.isbnValid(ISBN))
+        if (!validator.isISBN)
             return res.status(400).send({ status: false, message: "Please provide valid ISBN, e.g: 978-1861978709 " })
 
         const findISBN = await bookModel.findOne({ ISBN: ISBN })
@@ -70,7 +70,7 @@ const createBook = async function (req, res) {
             return res.status(400).send({ status: false, message: "Please provide the releasedAt" })
 
         const createdBook = await bookModel.create(bookData)
-        return res.status(201).send({ status: true, data: createdBook })
+        return res.status(201).send({ status: true,message: "Success", data: createdBook })
 
     }
     catch (err) {
@@ -83,21 +83,30 @@ const createBook = async function (req, res) {
 const getBook = async function (req, res) {
     try {
         const data = req.query
-        const { userId, category, subcategory } = data
+        let { userId, category, subcategory } = data
+        if(userId){
+            userId = data.userId = userId.trim()
+        }
+        if(category){
+            category = data.category = category.trim()
+        }
+        if(subcategory){
+            subcategory = data.subcategory = subcategory.trim()
+        }
+        
         if (Object.keys(data).length == 0) {
             const fetchData = await bookModel.find({ isDeleted: false }).select({ _id: 1, title: 1, excerpt: 1, userId: 1, category: 1, reviews: 1, releasedAt: 1 }).sort({ title: 1 })
-            return res.status(200).send({ status: true, data: fetchData })
+            return res.status(200).send({ status: true,message: 'Books list', data: fetchData })
         }
 
         if (userId || subcategory || category) {
-
             const filterData = await bookModel.find({ ...data, isDeleted: false }).select({ _id: 1, title: 1, excerpt: 1, userId: 1, category: 1, reviews: 1, releasedAt: 1 }).sort({ title: 1 })
 
             if (filterData.length == 0) { return res.status(404).send({ status: false, message: "book not found" }) }
 
-            return res.status(200).send({ status: true, data: filterData })
+            return res.status(200).send({ status: true,message: 'Books list', data: filterData })
         }
-        else return res.status(400).send({ status: false, message: "invalid key" })
+        else return res.status(400).send({ status: false, message: "Please provide valid key-value pair" })
 
 
     } catch (err) {
@@ -182,7 +191,7 @@ const deletBook = async function(req,res){
         
             if (bookid.isDeleted == true) return res.status(400).send({status : false, message : "book is already deleted"});
         
-             await bookModel.findOneAndUpdate({_id: data},{$set : {isDeleted:true} });
+             await bookModel.findOneAndUpdate({_id: data},{$set : {isDeleted:true, deletedAt: new Date()} });
         
              return res.status(200).send({status: true , message : "succesfully deleted"})
         

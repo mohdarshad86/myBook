@@ -3,6 +3,7 @@ const valid = require("../validation/validation")
 const userModel = require("../models/userModel");
 const jwt = require('jsonwebtoken')
 
+
 const userRegister = async function (req, res) {
     try {
         const userData = req.body;
@@ -106,13 +107,7 @@ const userRegister = async function (req, res) {
         return res.status(500).send({ status: false, message: error.message });
     }
 }
-/*
-POST /login
 
-Allow an user to login with their email and password.
-On a successful login attempt return a JWT token contatining the userId, exp, iat. The response should be a JSON object like this
-If the credentials are incorrect return a suitable error message with a valid HTTP status code. The response should be a JSON object like this
-*/
 
 
 const userLogin = async function(req,res){

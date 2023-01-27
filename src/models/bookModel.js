@@ -2,6 +2,7 @@
 const mongoose = require('mongoose')
 const ObjectId = mongoose.Schema.Types.ObjectId
 
+
 const bookModel = new mongoose.Schema({
 
     title: {
@@ -20,9 +21,14 @@ const bookModel = new mongoose.Schema({
 
     },
     ISBN: {
+
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        validate : [
+            validator.isISBN,
+            "invalid ISBN"
+        ]
     },
     category: {
         type: String,
