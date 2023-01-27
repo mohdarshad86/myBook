@@ -23,12 +23,12 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true,
         unique: true
-    }, //valid email, unique handle krenge controller me 
+    }, 
 
     password: {
         type: String,
         required: true
-    },// minLen 8, maxLen 15 controller me handle krenge 
+    },
 
 
     address: {
@@ -39,6 +39,6 @@ const userSchema = mongoose.Schema({
         },
    
 },
-{ timestamp: true })
+{ timestamps: true })
 
 module.exports = mongoose.model('user', userSchema)

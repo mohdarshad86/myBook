@@ -2,16 +2,6 @@ const mongoose = require('mongoose')
 const bookModel = require('../models/bookModel')
 const reviewModel = require('../models/reviewModel')
 
-/*
-POST /books/:bookId/review
-
-Add a review for the book in reviews collection.
-Check if the bookId exists and is not deleted before adding the review. Send an error response with appropirate status code like this if the book does not exist
-Get review details like review, rating, reviewer's name in request body.
-Update the related book document by increasing its review count
-Return the updated book document with reviews data on successful operation. The response body should be in the form of JSON object like this
-*/
-
 const reviewCreate = async function (req, res) {
 
     try {
@@ -94,15 +84,6 @@ const reviewCreate = async function (req, res) {
 }
 
 
-/*
-PUT /books/:bookId/review/:reviewId
-Update the review - review, rating, reviewer's name.
-Check if the bookId exists and is not deleted before updating the review. Check if the review exist before updating the review. Send an error response with appropirate status code like this if the book does not exist
-Get review details like review, rating, reviewer's name in request body.
-Return the updated book document with reviews data on successful operation. The response body should be in the form of JSON object like this
-
-*/
-
 const updateReview = async function (req, res) {
     const bookId = req.params.bookId
     const reviewId = req.params.reviewId
@@ -111,7 +92,6 @@ const updateReview = async function (req, res) {
 
     try {
 
-        //===============================
         if (!bookId) { return res.status(400).send({ status: false, message: "Please provide book id" }) }
 
         if (!mongoose.isValidObjectId(bookId)) { return res.status(400).send({ status: false, message: "Please provide valid book id" }) }
@@ -119,8 +99,7 @@ const updateReview = async function (req, res) {
         const checkBookId = await bookModel.findOne({ _id: bookId, isDeleted: false })
 
         if (!checkBookId) { return res.status(404).send({ status: false, message: "not found any data by this id" }) }
-        //================================
-
+       
         if (!reviewId) { return res.status(400).send({ status: false, message: "Please provide review id" }) }
 
         if (!mongoose.isValidObjectId(reviewId)) { return res.status(400).send({ status: false, message: "Please provide valid review id" }) }
@@ -128,24 +107,23 @@ const updateReview = async function (req, res) {
         const checkReview = await reviewModel.findOne({ _id: reviewId, isDeleted: false })
 
         if (!checkReview) { return res.status(404).send({ status: false, message: "not found any data by review id" }) }
-        //======================
+        
         if (Object.keys(dataReview).length == 0) { return res.status(400).send({ status: false, message: "Please provide some fields to update" }) }
 
-        if (!review) { return res.status(400).send({ status: false, message: "Please provide review field" }) }
+        if (review || rating || reviewedBy) {
 
-        if (!rating) { return res.status(400).send({ status: false, message: "Please provide rating field" }) }
+            if (rating) {
+                if (rating < 1 || rating > 5) {
+                    return res.status(400).send({ status: false, messsage: "Please provide valid ratings from 1-5" })
+                }
+            }
 
-        if (rating < 1 || rating > 5) {
-            return res.status(400).send({ status: false, messsage: "Please provide valid ratings from 1-5" })
+            let update = await reviewModel.findOneAndUpdate({ _id: reviewId },
+                { $set: { review: review, rating: rating, reviewedBy: reviewedBy } }, { new: true })
+
+            return res.status(200).send({ status: true, data: update })
         }
-
-        if (!reviewedBy) { return res.status(400).send({ status: false, message: "Please provide review field" }) }
-
-        const update = await reviewModel.findOneAndUpdate({ _id: reviewId },
-            { $set: { review: review, rating: rating, reviewedBy: reviewedBy } }, { new: true })
-
-        return res.status(200).send({ status: true, data: update })
-
+        return res.status(400).send({status : false, message : "Please provide valid key-value pair to update review"})
     }
     catch (error) {
         res.status(500).send({ status: false, message: error.message })
@@ -153,12 +131,6 @@ const updateReview = async function (req, res) {
 
 }
 
-// DELETE /books/:bookId/review/:reviewId 
-
-// Check if the review exist with the reviewId. Check if the book exist with the bookId.
-// Send an error response with appropirate status code like this if the book or book review does not exist
-// Delete the related reivew.
-// Update the books document - decrease review count by one
 
 const reviewDeletion = async function (req, res) {
 
