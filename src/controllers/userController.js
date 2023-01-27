@@ -1,11 +1,3 @@
-/*
-
-POST /register
-Create a user - atleast 5 users
-Create a user document from request body.
-Return HTTP status 201 on a succesful user creation. Also return the user document. The response should be a JSON object like this
-Return HTTP status 400 if no params or invalid params received in request body. The response should be a JSON object like this
-*/
 
 const valid = require("../validation/validation")
 const userModel = require("../models/userModel");
@@ -14,8 +6,14 @@ const jwt = require('jsonwebtoken')
 const userRegister = async function (req, res) {
     try {
         const userData = req.body;
-        const { name, phone, title, password, email } = userData;
+        let { name, phone, title, password, email } = userData;
 
+        userData.name = name.trim()
+        phone = userData.phone = phone.trim()
+        title = userData.title = title.trim()
+        password = userData.password = password.trim()
+        email = userData.email = email.trim()
+        
         if (Object.keys(userData).length == 0) {
             return res
                 .status(400)
