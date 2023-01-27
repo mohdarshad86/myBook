@@ -24,11 +24,7 @@ const bookModel = new mongoose.Schema({
 
         type: String,
         required: true,
-        unique: true,
-        validate : [
-            validator.isISBN,
-            "invalid ISBN"
-        ]
+        unique: true
     },
     category: {
         type: String,

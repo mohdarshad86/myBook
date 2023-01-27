@@ -84,9 +84,6 @@ const reviewCreate = async function (req, res) {
         return res.status(500).send({ status: false, message: error.message })
     }
 
-
-
-
 }
 
 
@@ -152,24 +149,19 @@ const reviewDeletion = async function (req, res) {
             return res.status(404).send({ status: false, message: "No such book found" })
 
 
-        // if (findBook.reviews > 0) {
+        if (findBook.reviews > 0) {
 
-        //     const findReview = await reviewModel.findOneAndUpdate({ _id: reviewId, isDeleted: false }, { $set: { isDeleted: true } })
-        //     if (!findReview) {
-        //         return res.status(404).send({ status: false, message: "No such review found" })
-        //     }
+            const findReview = await reviewModel.findOneAndUpdate({ _id: reviewId, isDeleted: false }, { $set: { isDeleted: true } })
+            if (!findReview) {
+                return res.status(404).send({ status: false, message: " No such review found find by this review id " })
+            }
 
-        //     await bookModel.findOneAndUpdate({ _id: bookId }, { $inc: { reviews: -1 } }, { new: true })
+            await bookModel.findOneAndUpdate({ _id: bookId }, { $inc: { reviews: -1 } }, { new: true })
 
-        //     return res.status(200).send({ status: true, message: "review deleted successfully" })
-        // }
+            return res.status(200).send({ status: true, message: "review deleted successfully" })
+        }
 
-        let deleteReview = await reviewModel.findOneAndUpdate({_id: reviewId, bookId: bookId},{isDeleted: true},{ new: true})
-        let decreaseCount = await bookModel.findOneAndUpdate({_id: bookId, reviews: {$gt: 0}},{$inc: {reviews: -1}})
-        // if(decreaseCount){
-        //     return res.status(200).send({status: false, message: "review deleted"})
-        // }
-        return res.status(200).send({ status: true, message: "review deleted successfully" })
+        return res.status(200).send({ status: true, message: "no review found" })
 
     }
     catch (err) {
@@ -181,5 +173,3 @@ const reviewDeletion = async function (req, res) {
 
 
 module.exports = { reviewCreate, updateReview, reviewDeletion }
-
-
