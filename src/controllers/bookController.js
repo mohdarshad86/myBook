@@ -201,11 +201,9 @@ const deletBook = async function (req, res) {
 
         if (!mongoose.isValidObjectId(data)) return res.status(400).send({ status: false, message: "book id is not valid" })
 
-        let bookid = await bookModel.findById(data);
+        let bookid = await bookModel.findOne({_id:data, isDeleted: false});
 
-        if (!bookid) return res.status(400).send({ status: false, message: "this book is not exist in database" });
-
-        if (bookid.isDeleted == true) return res.status(400).send({ status: false, message: "book is already deleted" });
+        if (!bookid) return res.status(404).send({ status: false, message: "this book is not exist in database" });
 
         await bookModel.findOneAndUpdate({ _id: data }, { $set: { isDeleted: true, deletedAt: new Date() } });
 
