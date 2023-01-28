@@ -7,13 +7,8 @@ const jwt = require('jsonwebtoken')
 const userRegister = async function (req, res) {
     try {
         const userData = req.body;
+        
         let { name, phone, title, password, email } = userData;
-
-        userData.name = name.trim()
-        phone = userData.phone = phone.trim()
-        title = userData.title = title.trim()
-        password = userData.password = password.trim()
-        email = userData.email = email.trim()
         
         if (Object.keys(userData).length == 0) {
             return res
@@ -27,6 +22,8 @@ const userRegister = async function (req, res) {
                 .send({ status: false, message: "title is mandatory" });
         }
 
+        title = userData.title = title.trim()
+
         if (!["Mr", "Mrs", "Miss"].includes(title)) {
             return res
                 .status(400)
@@ -38,6 +35,8 @@ const userRegister = async function (req, res) {
                 .status(400)
                 .send({ status: false, message: "name is mandatory" });
         }
+
+        userData.name = name.trim()
 
         if (typeof (name) != "string") {
 
@@ -53,6 +52,9 @@ const userRegister = async function (req, res) {
                 .status(400)
                 .send({ status: false, message: "phone is mandatory " });
         }
+
+        
+        phone = userData.phone = phone.trim()
 
         if (typeof (phone) != "string") {
             return res
@@ -76,6 +78,8 @@ const userRegister = async function (req, res) {
                 .send({ status: false, message: "email is mandatory" });
         }
 
+        email = userData.email = email.trim()
+
         if (!valid.emailValid(email)) {
             return res
                 .status(400)
@@ -93,6 +97,8 @@ const userRegister = async function (req, res) {
                 .status(400)
                 .send({ status: false, message: "password is mandatory" });
         }
+
+        password = userData.password = password.trim()
 
         if (!valid.passwordValid(password)) {
             return res

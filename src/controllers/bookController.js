@@ -11,14 +11,15 @@ const createBook = async function (req, res) {
         const bookData = req.body
         let { title, excerpt, userId, ISBN, category, subcategory, releasedAt } = bookData
 
-        userId = userId.trim();
-
+       
         if (Object.keys(bookData).length = 0) {
             return res.status(400).send({ status: false, message: "Please provide some data to create book" })
         }
 
         if (!title)
             return res.status(400).send({ status: false, message: "Please provide title" })
+
+        title = bookData.title = title.trim()
 
         if (typeof (title) != "string")
             return res.status(400).send({ status: false, message: "Please provide valid title" })
@@ -30,11 +31,15 @@ const createBook = async function (req, res) {
         if (!excerpt)
             return res.status(400).send({ status: false, message: "Please provide the excerpt" })
 
+        excerpt = bookData.excerpt = excerpt.trim()
+
         if (typeof (excerpt) != "string")
             return res.status(400).send({ status: false, message: "Please provide valid excerpt" })
 
         if (!userId)
             return res.status(400).send({ status: false, message: "Please provide the userID" })
+
+        userId = bookData.userId = userId.trim()
 
 
         if (!mongoose.isValidObjectId(userId))
@@ -47,6 +52,8 @@ const createBook = async function (req, res) {
         if (!ISBN)
             return res.status(400).send({ status: false, message: "Please provide the ISBN" })
 
+        ISBN = bookData.ISBN = ISBN.trim()
+
         if (!valid.isbnValid(ISBN))
             return res.status(400).send({ status: false, message: "Please provide valid ISBN, e.g: 978-1861978709 " })
 
@@ -57,17 +64,26 @@ const createBook = async function (req, res) {
         if (!category)
             return res.status(400).send({ status: false, message: "Please provide the category" })
 
+        category = bookData.category = category.trim()
+
         if (typeof (category) != 'string')
             return res.status(400).send({ status: false, message: "Please provide valid category" })
 
         if (!subcategory)
             return res.status(400).send({ status: false, message: "Please provide the subcategory" })
 
+        subcategory = bookData.subcategory = subcategory.trim()
+
         if (typeof (subcategory) != 'string')
             return res.status(400).send({ status: false, message: "Please provide valid subcategory category" })
 
         if (!releasedAt)
             return res.status(400).send({ status: false, message: "Please provide the releasedAt" })
+
+        if (!valid.dateReg(releasedAt)) {
+            return res.status(400).send({ status: false, message: "Please provide valid date e.g. YYYY-MM-DD" })
+    
+        }
 
         const createdBook = await bookModel.create(bookData)
         return res.status(201).send({ status: true, message: "Success", data: createdBook })

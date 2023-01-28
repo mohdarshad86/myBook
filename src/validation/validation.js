@@ -1,4 +1,5 @@
 
+const moment = require('moment')
 
 const emailValid = function(email){
     re = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/;
@@ -20,5 +21,11 @@ const isbnValid = function(ISBN){
      return re.test(ISBN)
 }
 
+const dateReg = function isValidDate(date) {
+  if (!moment(date, 'YYYY-MM-DD', true).isValid()) {
+    return false;
+  }
+  return true;
+}
 
-module.exports = {emailValid, passwordValid, phoneValid,isbnValid}
+module.exports = {emailValid, passwordValid, phoneValid, isbnValid, dateReg}
