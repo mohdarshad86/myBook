@@ -16,31 +16,25 @@ const createBook = async function (req, res) {
             return res.status(400).send({ status: false, message: "Please provide some data to create book" })
         }
 
-        if (!title)
+        if (!title || typeof (title) != "string")
             return res.status(400).send({ status: false, message: "Please provide title" })
 
-        title = bookData.title = title.trim()
 
-        if (typeof (title) != "string")
-            return res.status(400).send({ status: false, message: "Please provide valid title" })
+        title = bookData.title = title.trim()
 
         const findBook = await bookModel.findOne({ title: title })
         if (findBook)
             return res.status(400).send({ status: false, message: "This book already exists" })
 
-        if (!excerpt)
+        if (!excerpt || typeof (excerpt) != "string")
             return res.status(400).send({ status: false, message: "Please provide the excerpt" })
-
+            
         excerpt = bookData.excerpt = excerpt.trim()
 
-        if (typeof (excerpt) != "string")
-            return res.status(400).send({ status: false, message: "Please provide valid excerpt" })
-
-        if (!userId)
+        if (!userId || typeof (userId) != "string")
             return res.status(400).send({ status: false, message: "Please provide the userID" })
 
         userId = bookData.userId = userId.trim()
-
 
         if (!mongoose.isValidObjectId(userId))
             return res.status(400).send({ status: false, message: "Please provide the valid userID" })
@@ -49,7 +43,7 @@ const createBook = async function (req, res) {
         if (!findUser)
             return res.status(404).send({ status: false, message: "user not found" })
 
-        if (!ISBN)
+        if (!ISBN || typeof (ISBN) != "string")
             return res.status(400).send({ status: false, message: "Please provide the ISBN" })
 
         ISBN = bookData.ISBN = ISBN.trim()
@@ -61,23 +55,17 @@ const createBook = async function (req, res) {
         if (findISBN)
             return res.status(400).send({ status: false, message: "This ISBN number already exists" })
 
-        if (!category)
-            return res.status(400).send({ status: false, message: "Please provide the category" })
+        if (!category || typeof (category) != 'string')
+            return res.status(400).send({ status: false, message: "Please provide category in string" })
 
         category = bookData.category = category.trim()
 
-        if (typeof (category) != 'string')
-            return res.status(400).send({ status: false, message: "Please provide valid category" })
-
-        if (!subcategory)
-            return res.status(400).send({ status: false, message: "Please provide the subcategory" })
+        if (!subcategory || typeof (subcategory) != 'string')
+            return res.status(400).send({ status: false, message: "Please provide subcategory in string" })
 
         subcategory = bookData.subcategory = subcategory.trim()
 
-        if (typeof (subcategory) != 'string')
-            return res.status(400).send({ status: false, message: "Please provide valid subcategory category" })
-
-        if (!releasedAt)
+        if (!releasedAt || typeof (releasedAt) != 'string')
             return res.status(400).send({ status: false, message: "Please provide the releasedAt" })
 
         if (!valid.dateReg(releasedAt)) {
@@ -159,9 +147,6 @@ const updateBook = async function (req, res) {
         const bookId = req.params.bookId
         const bookBody = req.body
         const { title, excerpt, releasedAt, ISBN } = bookBody
-
-        if (!bookId)
-            return res.status(400).send({ status: false, message: "please provide bookId in params" })
 
         if (!mongoose.isValidObjectId(bookId))
             return res.status(400).send({ status: false, message: "please provide valid bookId " })

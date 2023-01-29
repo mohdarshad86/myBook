@@ -16,10 +16,10 @@ const userRegister = async function (req, res) {
                 .send({ status: false, message: "provide key" });
         }
 
-        if (!title) {
+        if (!title || typeof (title) != "string") {
             return res
                 .status(400)
-                .send({ status: false, message: "title is mandatory" });
+                .send({ status: false, message: "please provide title in string" });
         }
 
         title = userData.title = title.trim()
@@ -30,37 +30,28 @@ const userRegister = async function (req, res) {
                 .send({ status: false, message: "please provide valid title" });
         }
 
-        if (!name) {
+        if (!name || typeof (name) != "string") {
             return res
                 .status(400)
-                .send({ status: false, message: "name is mandatory" });
+                .send({ status: false, message: "Please provide valid name" });
         }
 
-        userData.name = name.trim()
-
-        if (typeof (name) != "string") {
-
+        if(!valid.textReg(name)){
             return res
                 .status(400)
-                .send({ status: false, message: "name must be in string" });
-
+                .send({ status: false, message: "enter valid name" });
         }
 
+        name = userData.name = name.trim()
 
-        if (!phone) {
+        if (!phone || typeof (phone) != "string") {
             return res
                 .status(400)
-                .send({ status: false, message: "phone is mandatory " });
+                .send({ status: false, message: "Please provide valid phone" });
         }
-
-        
+ 
         phone = userData.phone = phone.trim()
 
-        if (typeof (phone) != "string") {
-            return res
-                .status(400)
-                .send({ status: false, message: "enter valid phone number" })
-        }
         if (!valid.phoneValid(phone)) {
             return res
                 .status(400)
@@ -143,7 +134,7 @@ const userLogin = async function(req,res){
         
         const userDetail = await userModel.findOne({email:email, password: password})
         if(!userDetail){
-            return res.status(400).send({status: false, message: "invalid login credential"})
+            return res.status(401).send({status: false, message: "invalid email or password"})
         }
 
         let payLoad = {userId : userDetail._id}
