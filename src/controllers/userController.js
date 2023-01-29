@@ -8,12 +8,12 @@ const userRegister = async function (req, res) {
     try {
         const userData = req.body;
         
-        let { name, phone, title, password, email } = userData;
+        let { name, phone, title, password, email, address } = userData;
         
         if (Object.keys(userData).length == 0) {
             return res
                 .status(400)
-                .send({ status: false, message: "provide key" });
+                .send({ status: false, message: "Please provide some data to create user" });
         }
 
         if (!title || typeof (title) != "string") {
@@ -35,6 +35,7 @@ const userRegister = async function (req, res) {
                 .status(400)
                 .send({ status: false, message: "Please provide valid name" });
         }
+        name = userData.name = name.trim()
 
         if(!valid.textReg(name)){
             return res
@@ -42,7 +43,7 @@ const userRegister = async function (req, res) {
                 .send({ status: false, message: "enter valid name" });
         }
 
-        name = userData.name = name.trim()
+    
 
         if (!phone || typeof (phone) != "string") {
             return res
@@ -96,6 +97,36 @@ const userRegister = async function (req, res) {
                 .status(400)
                 .send({ status: false, message: "Password should contain atleast 1 lowercase, 1 uppercase, 1 numeric ,1 special character, range between 8-12" });
         }
+
+        if(address){
+            if (!address.street || typeof (address.street) != "string") {
+                return res
+                    .status(400)
+                    .send({ status: false, message: "Please provide street name in address" });
+            }
+            address.street = userData.address.street = address.street.trim()
+            
+            if (!address.city || typeof (address.city) != "string") {
+                return res
+                    .status(400)
+                    .send({ status: false, message: "Please provide city name in address" });
+            }
+            address.city = userData.address.city = address.city.trim()
+
+
+            if (!address.pincode || typeof (address.pincode) != "string") {
+                return res
+                    .status(400)
+                    .send({ status: false, message: "Please provide pincode in address" });
+            }
+            address.pincode = userData.address.pincode = address.pincode.trim()
+
+            if(!valid.pinReg(address.pincode)){
+                return res
+                    .status(400)
+                    .send({ status: false, message: "Please provide valid pincode in following format, e.g: ** or * *" })
+            }
+        }
         const registeredData = await userModel.create(userData);
         res
             .status(201)
@@ -134,7 +165,7 @@ const userLogin = async function(req,res){
         
         const userDetail = await userModel.findOne({email:email, password: password})
         if(!userDetail){
-            return res.status(401).send({status: false, message: "invalid email or password"})
+            return res.status(401).send({status: false, message: " email or password not matched"})
         }
 
         let payLoad = {userId : userDetail._id}

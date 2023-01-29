@@ -33,12 +33,10 @@ const textReg = function(val){
   return name.test(val)
 }
 
-// const excerpt = function(excerpt){
-//   var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*]).{3,15}$");
-//   /*at least 1 lowercase, at least 1 uppercase,contain at least 1 numeric character,
-//   at least one special character, range between 3-15*/
-//   return strongRegex.test(excerpt)
-// }
+const pinReg = function(pincode){
+  const re = /^[1-9]{1}[0-9]{2}\s{0,1}[0-9]{3}$/
+  return re.test(pincode)
+}
 
 
-module.exports = {emailValid, passwordValid, phoneValid, isbnValid, dateReg, textReg}
+module.exports = {emailValid, passwordValid, phoneValid, isbnValid, dateReg, textReg, pinReg}
