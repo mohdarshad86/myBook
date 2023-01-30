@@ -1,12 +1,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
+var cors = require('cors')
 const port = process.env.PORT || 3000;
 const route = require("./routes/route");
 mongoose.set("strictQuery", true);
 const app = express();
 
 app.use(express.json());
-
+app.use('cors')
 mongoose
   .connect(
     "mongodb+srv://Chetan_ProjectClustor:PNr1Fn8OcRu2cGmk@project1.h4p8xqh.mongodb.net/group13Database",
