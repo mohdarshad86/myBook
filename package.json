@@ -1,5 +1,5 @@
 {
-  "name": "bookmanagement",
+  "name": "book-management",
   "version": "1.0.0",
   "description": "\"Book Publisher and User Management\"",
   "main": "index.js",
