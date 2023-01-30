@@ -33,7 +33,7 @@ const userRegister = async function (req, res) {
         if (!name || typeof (name) != "string") {
             return res
                 .status(400)
-                .send({ status: false, message: "Please provide valid name" });
+                .send({ status: false, message: "Please provide valid name in string" });
         }
         name = userData.name = name.trim()
 
@@ -48,7 +48,7 @@ const userRegister = async function (req, res) {
         if (!phone || typeof (phone) != "string") {
             return res
                 .status(400)
-                .send({ status: false, message: "Please provide valid phone" });
+                .send({ status: false, message: "Please provide valid phone in string" });
         }
  
         phone = userData.phone = phone.trim()
@@ -64,10 +64,10 @@ const userRegister = async function (req, res) {
                 .status(400)
                 .send({ status: false, message: "phone is already exist" });
         }
-        if (!email) {
+        if (!email || typeof(email) != "string") {
             return res
                 .status(400)
-                .send({ status: false, message: "email is mandatory" });
+                .send({ status: false, message: "email must be in string"});
         }
 
         email = userData.email = email.trim()
@@ -84,10 +84,10 @@ const userRegister = async function (req, res) {
                 .send({ status: false, message: "email is already exist" });
         }
 
-        if (!password) {
+        if (!password || typeof(password) != "string") {
             return res
                 .status(400)
-                .send({ status: false, message: "password is mandatory" });
+                .send({ status: false, message: "password is must be in string" });
         }
 
         password = userData.password = password.trim()
@@ -145,17 +145,19 @@ const userLogin = async function(req,res){
         if(Object.keys(data).length==0){
             return res.status(400).send({status: false, message: "Please provide mandatory details"})
         }
-        if(!email){
-            return res.status(400).send({status: false, message: "Please provide email-id"})
+        if(!email || typeof(email) != "string"){
+            return res.status(400).send({status: false, message: "Please provide email-id instring"})
         }
+        email = data.email = email.trim()
         if (!valid.emailValid(email)) {
             return res
               .status(400)
               .send({ status: false, message: "please provide valid email id" });
           }
-        if(!password){
-            return res.status(400).send({status: false, message: "Please provide password"})
+        if(!password || typeof(password) != "string"){
+            return res.status(400).send({status: false, message: "Please provide password in string"})
         }
+        password = data.password = password.trim()
 
         if (!valid.passwordValid(password)) {
             return res
