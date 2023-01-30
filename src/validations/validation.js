@@ -1,34 +1,58 @@
-const validate = function(a){
-if(a.match (/^(?=.{1,50}$)[a-z]+(?:['_.\s][a-z]+)*$/i)) return true
-}
 
-const validateTitle = function(a){
-if(a.match (/^([a-z A-Z\d]){2,50}$/)) return true
-}
+//======================================= Name ========================================//
 
-const validateISBN= function(a){
-    if(a.match(/^(?:ISBN(?:-1[03])?:? )?(?=[0-9X]{10}$|(?=(?:[0-9]+[- ]){3})[- 0-9X]{13}$|97[89][0-9]{10}$|(?=(?:[0-9]+[- ]){4})[- 0-9]{17}$)(?:97[89][- ]?)?[0-9]{1,5}[- ]?[0-9]+[- ]?[0-9]+[- ]?[0-9X]$/i)) return true
-}
 
-const validateEmail = function(a){
-    if(a.match(/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/)) return true
-}
-
-const validatePassword = function(a){
-    if(a.match(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/)) return true
-}
-
-const validatePhone = function(a){
-    if(a.match(/^[6-9][0-9]{9}$/)) return true
-}
-
-const validatePincode = (pincode) => {
-    if(a.match(/^[1-9][0-9]{5}$/)) return true
-}
-
-const validatePlace = (value) => {
-    if(a.match(/^[^\W\d_]+\.?(?:[-\s'’][^\W\d_]+\.?)*$/)) return true
+const validName = (name) => {
+    return (/^(?=.{1,50}$)[a-z]+(?:['_.\s][a-z]+)*$/i.test(name));
 }
 
 
-module.exports={validate,validateTitle,validateISBN,validateEmail,validatePassword,validatePhone,validatePincode,validatePlace}
+//====================================== Email =======================================//
+
+
+const validEmail = (email) => {
+    return (/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/.test(email));
+}
+
+
+//===================================== Password ====================================//
+
+
+const validPassword = (password) => {
+    return (/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,15}$/.test(password));
+}
+
+
+//==================================== Number ======================================//
+
+
+const validMobileNo = (Number) => {
+    return ((/^((\+91)?|91)?[6789][0-9]{9}$/g).test(Number));
+}
+
+
+//===================================== Pincode ===================================//
+
+
+const validPincode = (pincode) => {
+    return (/^[1-9][0-9]{5}$/).test(pincode);
+}
+
+
+//==================================== ISBN =======================================//
+
+
+const validISBN = (ISBN) => {
+    return (/^(?=(?:\D*\d){13}(?:(?:\D*\d){3})?$)[\d-]+$/g).test(ISBN);
+}
+
+
+//===================================== Place ===================================//
+
+
+const validPlace = (value) => {
+    return (/^[^\W\d_]+\.?(?:[-\s'’][^\W\d_]+\.?)*$/).test(value);
+}
+
+
+module.exports = { validName, validEmail, validPassword, validMobileNo, validPincode, validISBN, validPlace }
