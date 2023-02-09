@@ -12,9 +12,9 @@ app.use(cors())
 
 app.use(multer().any())
 
-mongoose.set('strictQuery', true) //to avoid deprication warning
+mongoose.set('strictQuery', true)
 
-mongoose.connect("mongodb+srv://nehajaiswal:neha123@nehadb.pcorgpc.mongodb.net/group15Database", {
+mongoose.connect("mongodb+srv://Chetan_ProjectClustor:PNr1Fn8OcRu2cGmk@project1.h4p8xqh.mongodb.net/group13Database", {
     useNewUrlParser: true,
 })
     .then(() => console.log("DB is Connected"))
